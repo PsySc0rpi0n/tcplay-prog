@@ -5,16 +5,16 @@ read filename
 expfilename=$filename
 echo "$expfilename"
 
-if [ -s $filename ]; then
-    echo "$filename exists!"
+if [ -s $expfilename ]; then
+    echo "$expfilename exists!"
 
-    if [ -r $filename ]; then
-        echo "$filename is readable!"
+    if [ -r $expfilename ]; then
+        echo "$expfilename is readable!"
     fi
 
-    if [ -f $filename ]; then
-        echo "$filename is accessible!"
+    if [ -f $expfilename ]; then
+        echo "$expfilename is accessible!"
     fi
 else
-    echo "$filename not found!"
+    echo "$expfilename not found!"
 fi
