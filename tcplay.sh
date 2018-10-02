@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 echo "Enter Virtual Volume filename and path:"
 read filename
