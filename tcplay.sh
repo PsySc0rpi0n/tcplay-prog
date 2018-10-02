@@ -1,20 +1,8 @@
 #!/bin/sh
 
-echo "Enter Virtual Volume filename and path:"
-read filename
-expfilename=$filename
-echo "$expfilename"
-
-if [ -s $expfilename ]; then
-    echo "$expfilename exists!"
-
-    if [ -r $expfilename ]; then
-        echo "$expfilename is readable!"
-    fi
-
-    if [ -f $expfilename ]; then
-        echo "$expfilename is accessible!"
-    fi
+echo $#
+if [ $# -lt 2 ]; then
+   echo "Not enough parameters. Usage: " $0 "path/to/file/filename.ext"
 else
-    echo "$expfilename not found!"
+   echo "File" $1 "found!"
 fi
