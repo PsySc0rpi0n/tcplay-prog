@@ -5,7 +5,7 @@ if [ $# -lt 1 ]; then
 fi
 
 if [[ ! -e $1 || ! -r $1 || ! -f $1 ]]; then
-   echo "File $1 not found or ready!"
+   echo "File $1 not found or not ready!"
 fi
 
 export MOUNT=/dev/loop0
