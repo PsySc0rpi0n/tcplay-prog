@@ -1,2 +1,4 @@
 .gitignore
 encrypted.gpg
+test.sh
+encrypted.txt
