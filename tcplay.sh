@@ -1,5 +1,5 @@
 #!/bin/sh
-make_available(){
+make_available("$@"){
    if [ $# -lt 1 ]; then
       echo "Not enough parameters. Usage: $0 path/to/file/filename.ext"
       exit 1
@@ -23,7 +23,7 @@ make_available(){
    fi
 }
 
-make_unavailable(){
+make_unavailable("$@"){
    sudo dmsetup remove $1
    sudo losetup -d /dev/loop0
    echo "Undone!"
