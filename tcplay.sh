@@ -1,30 +1,4 @@
 #!/bin/sh
-
-read -ep "Make Available [a] or Make Unavailable [u]: " opt
-
-while [[ $opt -ne 'a' && $opt -ne 'u' && $opt -ne 'x' ]]
-do
-   echo "Wrong option!"
-   echo "Available options are [a], [u] or [x] to quit!"
-done
-
-echo $opt
-
-case $opt in
-   "a"|"A")
-      make_available
-      ;;
-   "u"|"U")
-      make_unavailable
-      ;;
-   "x"|"X")
-      exit 1
-      ;;
-   *)
-      echo "Unknown error!" >&2
-      ;;
-esac
-
 make_available(){
    if [ $# -lt 1 ]; then
       echo "Not enough parameters. Usage: $0 path/to/file/filename.ext"
@@ -54,3 +28,36 @@ make_unavailable(){
    sudo losetup -d /dev/loop0
    echo "Undone!"
 }
+
+show_params(){
+    echo "Number of parameters is $#."
+    echo "List of parameters is $@."
+}
+####################### Main Script ############################
+read -ep "Make Available [a] or Make Unavailable [u]: " opt
+
+while [[ $opt -ne 'a' && $opt -ne 'u' && $opt -ne 'x' ]]
+do
+   echo "Wrong option!"
+   echo "Available options are [a], [u] or [x] to quit!"
+done
+
+echo $opt
+
+case $opt in
+   "a"|"A")
+      show_params
+      make_available
+      ;;
+   "u"|"U")
+      make_unavailable
+      ;;
+   "x"|"X")
+      exit 1
+      ;;
+   *)
+      echo "Unknown error!" >&2
+      ;;
+esac
+
+
