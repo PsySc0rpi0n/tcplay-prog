@@ -60,6 +60,10 @@ make_unavailable(){
                 echo "Error undoing losetup command!" 1>&2
                 return $cmd_status
             fi
+            ;&
+        0)
+            echo "No commans done so no commands undone!" 1>&2
+            return $cm_status
             ;;
         *)  echo "No commands undone or unknown error!" 1>&2
             exit 1
