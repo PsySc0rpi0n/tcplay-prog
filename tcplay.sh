@@ -14,7 +14,6 @@ make_available(){
 
    echo "Issuing losetup command:"
    if sudo losetup /dev/loop0 "$1" -ne 0; then
-   #if [[ $? -ne 0 ]]; then
       echo "Error with $1!" 1>&2
       return 1
    fi
@@ -23,7 +22,6 @@ make_available(){
 
    echo "Issuing tcplay command:"
    if sudo tcplay -m "$1" -d /dev/loop0 -ne 0; then
-   #if [[ $? -ne 0 ]]; then
       echo "Error attaching $1 container to /dev/loop0!" 1>&2
       return 2
    fi
@@ -32,7 +30,6 @@ make_available(){
 
    echo "Issuing mount command:"
    if sudo mount /dev/mapper/"$1" /media/ISOimgs -ne 0; then
-   #if [[ $? -eq 0  ]]; then
        echo "Error mounting /dev/mapper/$1 into /media/ISOimgs!" 1>&2
        return 3;
    fi
@@ -46,7 +43,6 @@ make_unavailable(){
         3)
             echo "Undoing mount command:"
             if sudo umount /media/ISOimgs -eq 0; then
-            #if [[ $? -eq 0 ]]; then
                 echo "Error undoing mount command!" 1>&2
                 return $cmd_status
             fi
@@ -54,7 +50,6 @@ make_unavailable(){
         2)
             echo "Undoing tcplay command with dmsetup:"
             if sudo dmsetup remove "$1" -eq 0; then
-            #if [[  $? -eq 0 ]]; then
                 echo "Error undoing tcplay with dmsetup!" 1>&2
                 return $cmd_status
             fi
@@ -62,7 +57,6 @@ make_unavailable(){
         1)
             echo "Undoing losetup command:"
             if sudo losetup -d /dev/loop0 -eq 0; then
-            #if [[ $? -eq 0 ]]; then
                 echo "Error undoing losetup command!" 1>&2
                 return $cmd_status
             fi
@@ -82,7 +76,7 @@ show_params(){
 #########################           Main Script               #########################
 cmd_status=0
 
-if $# -lt 1; then
+if [[ $# -lt 1 ]]; then
     echo "Usage: $0 /path/to/container.tc"
     exit 1
 fi
@@ -90,14 +84,13 @@ fi
 while true; do
     echo "Enter an option:"
     echo "[A] or [a] to make Available"
-    echo "[U] or [u] to make unavailable"
+    echo "[U] or [u] to make Unavailable"
     echo "[Q] or [q] to quit"
     while true; do
         read -r -n1 -p "> " opt
         echo
         case $opt in
             "a"|"A")
-                #show_params "$@"
                 make_available "$@" cmd_status
                 ;;
             "u"|"U")
@@ -107,7 +100,7 @@ while true; do
                 exit 1
                 ;;
             *)
-                echo "Unknown error!" >&2
+                echo "Unknown error!" 1>&2
                 ;;
         esac
     done
