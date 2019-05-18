@@ -4,12 +4,12 @@
 make_available(){
    if $# -lt 1; then
       echo "Not enough parameters. Usage: $0 path/to/file/filename.ext"
-      exit -1
+      exit 1
    fi
 
-   if ! -e $1 || ! -r $1 || ! -f $1; then
+   if ! -e "$1" || ! -r "$1" || ! -f "$1""; then
       echo "File $1 not found or not ready!"
-      exit -1
+      exit 1
    fi
 
    echo "Issuing losetup command:"
@@ -82,24 +82,15 @@ show_params(){
 #########################           Main Script               #########################
 cmd_status=0
 
-#do
-#    read -ep "Make Available [a] or Make Unavailable [u]: " opt
-#    while [[ $(opt) -ne 'a' && $(opt) -ne 'u' && $(opt) -ne 'x' ]]
-#    do
-#        echo "Wrong option!"
-#        echo "Available options are [a], [u] or [x] to quit!"
-#    done
-#while $(opt) -ne 'x' || $(opt) -ne 'X';
-#done
 if $# -lt 1; then
     echo "Usage: $0 /path/to/container.tc"
-    exit -1
+    exit 1
 fi
 
 while true; do
     echo "Enter an option:"
     echo "[A] or [a] to make Available"
-    echo "[U] or  [u] to make unavailable"
+    echo "[U] or [u] to make unavailable"
     echo "[Q] or [q] to quit"
     while true; do
         read -r -n1 -p "> " opt
