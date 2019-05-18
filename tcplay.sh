@@ -2,12 +2,12 @@
 
 ######################### Make the Virtual Volume available #########################
 make_available(){
-   if $# -lt 1; then
+   if [[ $# -lt 1 ]]; then
       echo "Not enough parameters. Usage: $0 path/to/file/filename.ext"
       exit 1
    fi
 
-   if ! -e "$1" || ! -r "$1" || ! -f "$1"; then
+   if [[ ! -e "$1" || ! -r "$1" || ! -f "$1" ]]; then
       echo "File $1 not found or not ready!"
       exit 1
    fi
