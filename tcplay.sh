@@ -13,7 +13,7 @@ make_available(){
    fi
 
    echo "Issuing losetup command:"
-   if sudo losetup /dev/loop0 "$1" -ne 0; then
+   if ! sudo losetup /dev/loop0 "$1"; then
       echo "Error with $1!" 1>&2
       return 1
    fi
@@ -21,7 +21,7 @@ make_available(){
    echo "losetup done!"
 
    echo "Issuing tcplay command:"
-   if sudo tcplay -m "$1" -d /dev/loop0 -ne 0; then
+   if ! sudo tcplay -m "$1" -d /dev/loop0; then
       echo "Error attaching $1 container to /dev/loop0!" 1>&2
       return 2
    fi
@@ -29,7 +29,7 @@ make_available(){
    echo "tcplay done!"
 
    echo "Issuing mount command:"
-   if sudo mount /dev/mapper/"$1" /media/ISOimgs -ne 0; then
+   if ! sudo mount /dev/mapper/"$1" /media/ISOimgs; then
        echo "Error mounting /dev/mapper/$1 into /media/ISOimgs!" 1>&2
        return 3;
    fi
@@ -41,29 +41,29 @@ make_available(){
 make_unavailable(){
     case $cmd_status in
         3)
-            echo "Undoing mount command:"
-            if sudo umount /media/ISOimgs -eq 0; then
+            echo "Undoing mount command!"
+            if ! sudo umount /media/ISOimgs; then
                 echo "Error undoing mount command!" 1>&2
                 return $cmd_status
             fi
             ;&
         2)
-            echo "Undoing tcplay command with dmsetup:"
-            if sudo dmsetup remove "$1" -eq 0; then
+            echo "Undoing tcplay command with dmsetup!"
+            if ! sudo dmsetup remove "$1"; then
                 echo "Error undoing tcplay with dmsetup!" 1>&2
                 return $cmd_status
             fi
             ;&
         1)
-            echo "Undoing losetup command:"
-            if sudo losetup -d /dev/loop0 -eq 0; then
+            echo "Undoing losetup command!"
+            if ! sudo losetup -d /dev/loop0; then
                 echo "Error undoing losetup command!" 1>&2
                 return $cmd_status
             fi
             ;&
         0)
             echo "No commans done so no commands undone!" 1>&2
-            return $cm_status
+            return $cmd_status
             ;;
         *)  echo "No commands undone or unknown error!" 1>&2
             exit 1
