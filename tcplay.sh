@@ -7,7 +7,7 @@ make_available(){
       exit 1
    fi
 
-   if ! -e "$1" || ! -r "$1" || ! -f "$1""; then
+   if ! -e "$1" || ! -r "$1" || ! -f "$1"; then
       echo "File $1 not found or not ready!"
       exit 1
    fi
@@ -31,7 +31,7 @@ make_available(){
    echo "tcplay done!"
 
    echo "Issuing mount command:"
-   if sudo mount /dev/mapper/$1 /media/ISOimgs -ne 0; then
+   if sudo mount /dev/mapper/"$1" /media/ISOimgs -ne 0; then
    #if [[ $? -eq 0  ]]; then
        echo "Error mounting /dev/mapper/$1 into /media/ISOimgs!" 1>&2
        return 3;
@@ -76,7 +76,7 @@ make_unavailable(){
 
 show_params(){
     echo "Number of parameters is $#."
-    echo "List of parameters is $@."
+    echo "List of parameters is $*."
 }
 
 #########################           Main Script               #########################
