@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 ######################### Make the Virtual Volume available #########################
 make_available(){
