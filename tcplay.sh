@@ -3,38 +3,34 @@
 ######################### Make the Virtual Volume available #########################
 make_available(){
    if [[ $# -lt 1 ]]; then
-      echo "Not enough parameters. Usage: $0 path/to/file/filename.ext"
-      exit 1
+      return 1
    fi
 
    if [[ ! -e "$1" || ! -r "$1" || ! -f "$1" ]]; then
-      echo "File $1 not found or not ready!"
-      exit 1
+      return 2
    fi
 
    echo "Issuing losetup command:"
    if ! sudo losetup /dev/loop0 "$1"; then
-      echo "Error with $1!" 1>&2
-      return 1
+      return 3
    fi
    cmd_status=1
    echo "losetup done!"
 
    echo "Issuing tcplay command:"
    if ! sudo tcplay -m "$1" -d /dev/loop0; then
-      echo "Error attaching $1 container to /dev/loop0!" 1>&2
-      return 2
+      return 4
    fi
    cmd_status=2
    echo "tcplay done!"
 
    echo "Issuing mount command:"
    if ! sudo mount /dev/mapper/"$1" /media/ISOimgs; then
-       echo "Error mounting /dev/mapper/$1 into /media/ISOimgs!" 1>&2
-       return 3;
+       return 5;
    fi
    cmd_status=3
    echo "mount done!"
+   return 0
 }
 
 ######################### Make the Virtual Volume unavailable #########################
@@ -60,7 +56,7 @@ make_unavailable(){
                 echo "Error undoing losetup command!" 1>&2
                 return $cmd_status
             fi
-            ;&
+            ;;
         0)
             echo "No commans done so no commands undone!" 1>&2
             return $cmd_status
@@ -80,10 +76,22 @@ show_params(){
 #########################           Main Script               #########################
 cmd_status=0
 
-if [[ $# -lt 1 ]]; then
-    echo "Usage: $0 /path/to/container.tc"
-    exit 1
-fi
+###### Error hanling ######
+err_no_err=0
+err_status=0
+err_param=1
+err_no_file=2
+err_losetup=3
+err_tcplay=4
+err_mount=5
+err_umount=6
+err_dmsetup=7
+err_r_losetup=8
+
+#if [[ $# -lt 1 ]]; then
+#    echo "Usage: $0 /path/to/container.tc"
+#    exit 1
+#fi
 
 while true; do
     echo "Enter an option:"
@@ -95,8 +103,30 @@ while true; do
         echo
         case $opt in
             "a"|"A")
-                make_available "$@" cmd_status
-                ;;
+               case make_available "$@" cmd_status in
+                   1)
+                       echo "Not enough parameters. Usage: $0 /path/to/container.tc"
+                       ;;
+                   2)
+                       echo "$1 oesn't exist or not ready!"
+                       ;;
+                   3)
+                       echo "Error with $1! Please fix manually!"
+                       ;;
+                   4)
+                       echo "Error with $1! Please fix manually!"
+                       ;;
+                   5)
+                       echo "Error with $1! Please fix manually!"
+                       ;;
+                   0)
+                       echo
+                       ;;
+                   *)
+                       echo "Unknown error! Exiting..."
+                       exit 1
+                       ;;
+               esac
             "u"|"U")
                 make_unavailable "$@" cmd_status
                 ;;
