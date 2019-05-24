@@ -103,7 +103,8 @@ while true; do
         echo
         case $opt in
             "a"|"A")
-               case make_available "$@" cmd_status in
+               make_available "$@" cm_status
+               case "$?" in
                    1)
                        echo "Not enough parameters. Usage: $0 /path/to/container.tc"
                        ;;
@@ -128,14 +129,14 @@ while true; do
                        ;;
                esac
             "u"|"U")
-                make_unavailable "$@" cmd_status
+               make_unavailable "$@" cmd_status
                 ;;
             "q"|"Q")
-                exit 1
-                ;;
+               exit 1
+               ;;
             *)
-                echo "Unknown error!" 1>&2
-                ;;
+               echo "Unknown error!" 1>&2
+               ;;
         esac
     done
 done
